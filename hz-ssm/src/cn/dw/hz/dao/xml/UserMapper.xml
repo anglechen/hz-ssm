@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace配置的是对应接口的具体路径名称 -->
+<mapper namespace="cn.dw.hz.dao.UserMapper">
+
+	<!-- id对应的是namespace所配置的接口里面的方法名称 -->
+	<insert id="add" parameterType="cn.dw.hz.model.User">
+		<!-- insert into user(name,password) values('abc','123456') -->
+		insert into user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<!-- 只要字符串类型才需要加上 ！='' 的判断 -->
+			<if test="name !=null and name !='' ">
+				name,
+			</if>
+			<if test="loginId !=null and loginId !='' ">
+				<!-- 里面对应的是数据库表的字段名称 -->
+				login_id,
+			</if>
+			<if test="sex !=null">
+				sex,
+			</if>
+			<if test="age !=null">
+				age,
+			</if>
+			<if test="password !=null and password !='' ">
+				password,
+			</if>
+			<if test="registerTime !=null">
+				register_time,
+			</if>
+			<if test="status !=null">
+				status,
+			</if>
+
+		</trim>
+
+		values
+
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<!-- 只要字符串类型才需要加上 ！='' 的判断 -->
+			<if test="name !=null and name !='' ">
+				#{name},
+			</if>
+			<if test="loginId !=null and loginId !='' ">
+				<!-- 里面对应的是数据库表的字段名称 -->
+				#{loginId},
+			</if>
+			<if test="sex !=null">
+				#{sex},
+			</if>
+			<if test="age !=null">
+				#{age},
+			</if>
+			<if test="password !=null and password !='' ">
+				#{password},
+			</if>
+			<if test="registerTime !=null">
+				#{registerTime},
+			</if>
+			<if test="status !=null">
+				#{status},
+			</if>
+		</trim>
+	</insert>
+	
+	
+	<delete id="delete" parameterType="cn.dw.hz.model.User">
+		delete from user where id = #{id}
+	</delete>
+	
+	<!-- 把数据库表中字段跟类型的属性不对应的做转换 -->
+	<resultMap type="cn.dw.hz.model.User" id="resultMap">
+		<result column="login_id" property="loginId"/>
+		<result column="register_time" property="registerTime"/>
+	</resultMap>
+	
+	
+	<!-- 查询 parameterType传递过来的是子类的实际对象-->
+	<!-- resultType="cn.dw.hz.model.User" 要求返回的记录字段名称能属性一致-->
+	<select id="query" parameterType="cn.dw.hz.dto.UserDto" resultMap="resultMap">
+		select * from user
+		<where>
+			<if test="name !=null and name !=''">
+				and name = #{name}
+			</if>
+			<if test="loginId !=null and loginId !=''">
+				and login_id = #{loginId}
+			</if>
+			<if test="startTime !=null">
+				and register_time >= #{startTime}
+			</if>
+			<if test="endTime !=null">
+				<!-- &lt;是< ; &gt;是>-->
+				and register_time &lt;= #{endTime}
+			</if>
+		</where>
+	</select>
+	
+	
+	<update id="update" parameterType="cn.dw.hz.model.User">
+		update user 
+		<set>
+			<if test="name !=null and name !=''">
+				name = #{name},
+			</if>
+			<if test="loginId !=null and loginId !=''">
+				login_id = #{loginId},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+</mapper>
